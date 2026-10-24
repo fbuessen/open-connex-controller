@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+  <meta name="referrer" content="no-referrer">
+  <title>Open Connex Controller</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <section id="loading-view" class="loading" role="status">Connecting to your controller… <button id="retry-load" class="btn secondary" type="button" hidden>Retry</button></section>
+  <svg class="sprite" aria-hidden="true"><defs>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h8m4 0h4M4 17h3m4 0h9"/><circle cx="14" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6z"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="9" r="5"/><path d="m12 13 8 8m-4-4 2-2m-5-1 2-2"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20 3c-1 8 2 15-9 15-6 0-8-6-4-10 3-3 8-2 13-5ZM4 21 15 10"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/></symbol>
+    <symbol id="i-sofa" viewBox="0 0 24 24"><path d="M5 12V8a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v4M5 14h14M5 19v2m14-2v2"/><path d="M5 11a2 2 0 0 0-4 0v5a3 3 0 0 0 3 3h16a3 3 0 0 0 3-3v-5a2 2 0 0 0-4 0v3H5z"/></symbol>
+    <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 18v3m18-3v3M3 10V5h18v5M1 18v-5a3 3 0 0 1 3-3h16a3 3 0 0 1 3 3v5zM5 10V7h5v3m4 0V7h5v3"/></symbol>
+    <symbol id="i-desk" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="11" rx="2"/><path d="M12 14v4m-4 0h8M2 21h20M4 21v-3m16 3v-3"/></symbol>
+    <symbol id="i-kitchen" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M7 6h1m4 0h1m4 0h.01"/><rect x="6" y="12" width="12" height="6" rx="1"/></symbol>
+    <symbol id="i-bathroom" viewBox="0 0 24 24"><path d="M3 12h18v3a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5zm3 8v2m12-2v2M5 12V5a3 3 0 0 1 6 0v1m-2 1h4m-2 2v.01"/></symbol>
+    <symbol id="i-hallway" viewBox="0 0 24 24"><path d="M5 21V3h14v18M2 21h20M8 21V6l8-2v17m-3-8h.01"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0m-11 4a6 6 0 0 1 8 0m-4 4h.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-exit" viewBox="0 0 24 24"><path d="M9 4H4v16h5m6-4 4-4-4-4M9 12h10"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M15 8V3H3v13h5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-radio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M7 7a7 7 0 0 0 0 10m10-10a7 7 0 0 1 0 10M3 3a13 13 0 0 0 0 18M21 3a13 13 0 0 1 0 18"/></symbol>
+  </defs></svg>
+  <div class="shell" id="app-shell" hidden>
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="sidebar-main"><div class="brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div><div class="brand-name">Open Connex Controller</div></div>
+      <div><p class="eyebrow">Your controller</p><nav class="nav"><button data-page="zones" aria-current="page"><svg aria-hidden="true"><use href="#i-grid"/></svg>Zones</button><button data-page="settings"><svg aria-hidden="true"><use href="#i-sliders"/></svg>Settings</button></nav></div>
+      </div><div class="sidebar-bottom"><div class="side-note">Your home. Your controller.<br>No cloud required.</div></div>
+    </aside>
+    <main class="content">
+      <section class="page" id="page-zones" aria-labelledby="zones-heading">
+        <div class="page-heading"><div><h1 id="zones-heading">Zones</h1><p>Manage target temperatures and operating modes.</p></div></div>
+        <div class="zone-grid" id="zone-grid"></div>
+
+        <footer class="dashboard-bottom"><span>Open Connex Controller</span><button class="btn quiet" id="refresh" type="button">Refresh</button></footer>
+      </section>
+      <section class="page" id="page-settings" hidden aria-labelledby="settings-heading">
+        <div class="page-heading"><div><h1 id="settings-heading">Settings</h1><p>Manage your zones, access and network connections.</p></div></div>
+        <div class="tabs" role="tablist" aria-label="Settings sections"><button id="tab-zones" role="tab" aria-controls="settings-zones" aria-selected="true" data-tab="zones">Zones</button><button id="tab-security" role="tab" aria-controls="settings-security" aria-selected="false" tabindex="-1" data-tab="security">Security</button><button id="tab-wifi" role="tab" aria-controls="settings-wifi" aria-selected="false" tabindex="-1" data-tab="wifi">Wi-Fi</button><button id="tab-controller" role="tab" aria-controls="settings-controller" aria-selected="false" tabindex="-1" data-tab="controller">Controller</button></div>
+        <div id="settings-zones" role="tabpanel" aria-labelledby="tab-zones"><div class="settings-stack"><article class="panel"><header class="section-heading"><div><h2>Your zones</h2><p>Names, room icons and heater settings.</p></div><button class="btn" id="add-zone"><svg aria-hidden="true"><use href="#i-plus"/></svg>Add zone</button></header><div class="zone-list" id="zone-list"></div><p class="zone-list-footer" id="zone-count"></p></article></div></div>
+        <div id="settings-security" role="tabpanel" aria-labelledby="tab-security" hidden>
+          <div class="settings-stack">
+            <article class="panel"><div class="panel-heading"><div class="panel-icon"><svg aria-hidden="true"><use href="#i-lock"/></svg></div><div><h2>Web interface password</h2><p>Sign in with this password to use the dashboard.</p></div></div><div class="setting-row"><div><h3>Password configured</h3><p>Choose a unique password at first setup.</p></div><button class="btn secondary" id="change-password">Change password</button></div><div class="panel-bottom"><span class="badge green"><svg class="inline-2" aria-hidden="true"><use href="#i-check"/></svg>Password protected</span></div></article>
+            <article class="panel"><div class="panel-heading"><div class="panel-icon"><svg aria-hidden="true"><use href="#i-key"/></svg></div><div><h2>API access</h2><p>Connect Home Assistant and other automations using a token.</p></div></div><div class="setting-row"><div><h3 id="token-title">No API token yet</h3><p id="token-description">Generate one when you’re ready to connect.</p></div><span id="token-status" class="badge neutral">Not generated</span></div><div id="token-display" class="token-display" hidden><label class="field" for="token-value">API token</label><textarea id="token-value" class="token-value" rows="3" readonly spellcheck="false"></textarea><button id="copy-token" class="btn secondary inline-3"><svg aria-hidden="true"><use href="#i-copy"/></svg>Copy token</button><p id="copy-status" class="hint inline-4" role="status"></p></div><div class="panel-bottom"><button class="btn" id="generate-token"><svg aria-hidden="true"><use href="#i-plus"/></svg><span id="token-action-label">Generate token</span></button><button class="btn quiet" id="revoke-token" hidden>Revoke token</button></div><p class="hint inline-5">Rotating replaces the current token immediately. Update Home Assistant and scripts with the new token.</p></article>
+            <article class="panel session-panel"><div class="setting-row"><div class="session-title"><div class="panel-icon"><svg aria-hidden="true"><use href="#i-exit"/></svg></div><div><h2>Session</h2><p>Signed in on this browser.</p></div></div><button class="btn secondary" id="sign-out"><svg aria-hidden="true"><use href="#i-exit"/></svg>Sign out</button></div></article>
+          </div>
+        </div>
+        <div id="settings-wifi" role="tabpanel" aria-labelledby="tab-wifi" hidden><article class="panel wifi-layout"><div class="panel-heading"><div class="panel-icon"><svg aria-hidden="true"><use href="#i-wifi"/></svg></div><div><h2>Wi-Fi connection</h2><p>Keep your controller on your local Wi-Fi network.</p></div></div><div class="wifi-banner"><div class="row"><svg aria-hidden="true"><use href="#i-wifi"/></svg><strong id="current-wifi">Loading network…</strong></div><span class="badge neutral" id="wifi-connection"></span></div><form id="wifi-form"><div class="row spread inline-6"><span class="small muted" id="scan-status" role="status">Find a network, or enter its name.</span><button type="button" class="btn secondary" id="scan-wifi">Scan networks</button></div><label class="field">Nearby networks<select id="wifi-networks"><option value="">Choose a network</option></select></label><label class="field">Network name<input id="wifi-ssid" name="ssid" required maxlength="32" autocomplete="off"><span class="hint">You can enter a hidden network’s name here.</span></label><label class="field">Wi-Fi password<input name="password" type="password" autocomplete="new-password" placeholder="Enter Wi-Fi password" maxlength="64"><span class="hint">The existing Wi-Fi password is never displayed.</span></label><p class="hint">A successful change disconnects this page. If the new connection fails, the controller returns to its previous network.</p><div class="dialog-actions"><button class="btn" type="submit">Save Wi-Fi connection</button></div></form></article></div>
+        <div id="settings-controller" role="tabpanel" aria-labelledby="tab-controller" hidden><article class="panel wifi-layout"><div class="panel-heading"><div class="panel-icon"><svg aria-hidden="true"><use href="#i-sliders"/></svg></div><div><h2>Controller information</h2><p>Device details and API address.</p></div></div><dl class="facts"><div><dt>Controller ID</dt><dd class="mono" id="device-id"></dd></div><div><dt>Firmware</dt><dd id="firmware-version"></dd></div><div><dt>Controller health</dt><dd id="device-health"></dd></div><div><dt>API base URL</dt><dd class="mono" id="api-url"></dd></div></dl></article><p class="hint inline-7">Controller health does not indicate heater availability.</p></div>
+      </section>
+    </main>
+  </div>
+  <section class="login" id="login-view" hidden aria-labelledby="login-heading"><div class="login-art"><div class="brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div><div class="brand-name">Open Connex Controller</div></div><div class="login-copy"><h1>Your home.<br>Your controller.</h1><p>No cloud required.</p></div><div class="rings" aria-hidden="true"></div></div><div class="login-form-wrap"><div class="login-form-inner"><div class="login-lock"><svg aria-hidden="true"><use href="#i-lock"/></svg></div><h2 id="login-heading">Sign in</h2><p id="login-description">Sign in to your local controller.</p><form id="login-form"><label class="field">Web interface password<input id="login-password" name="password" type="password" autocomplete="current-password" required placeholder="Enter your password"></label><p class="form-error" id="login-error" role="alert"></p><button class="btn" type="submit">Sign in<svg aria-hidden="true"><use href="#i-arrow"/></svg></button></form></div></div></section>
+
+  <section class="onboarding" id="setup-view" hidden aria-labelledby="setup-heading">
+    <aside class="setup-intro">
+      <div class="brand"><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div><div class="brand-name">Open Connex Controller</div></div>
+      <div><h1 id="setup-heading" tabindex="-1">Set up your controller</h1><p id="setup-intro-copy">Connect to your home Wi-Fi and choose a password for the web interface.</p>
+        <ol class="setup-steps"><li><svg aria-hidden="true"><use href="#i-wifi"/></svg>Choose your Wi-Fi network</li><li><svg aria-hidden="true"><use href="#i-lock"/></svg>Create your web password</li><li><svg aria-hidden="true"><use href="#i-check"/></svg>Reconnect on your home network</li></ol>
+      </div>
+      <div class="setup-tagline">Your home. Your controller.<br>No cloud required.</div>
+    </aside>
+    <div class="setup-content"><div class="setup-inner">
+      <form id="setup-form">
+        <article class="panel" id="setup-wifi-panel"><div class="panel-heading"><div class="panel-icon"><svg aria-hidden="true"><use href="#i-wifi"/></svg></div><div><h2>Home Wi-Fi</h2><p>Choose a network, or enter its name manually.</p></div></div>
+          <div class="setup-network-row"><span class="hint" id="setup-scan-status" role="status">Scan for nearby networks.</span><button class="btn secondary" id="setup-scan" type="button">Scan networks</button></div>
+          <label class="field">Nearby networks<select id="setup-networks"><option value="">Choose a network</option></select></label>
+          <label class="field">Network name<input id="setup-ssid" name="ssid" required maxlength="32" autocomplete="off" placeholder="Your network name"><span class="hint">Hidden networks can be entered here.</span></label>
+          <label class="field">Wi-Fi password<input name="wifiPassword" type="password" maxlength="64" autocomplete="new-password" placeholder="Enter Wi-Fi password"><span class="hint">Leave blank for an open network.</span></label>
+        </article>
+        <article class="panel" id="setup-password-panel"><div class="panel-heading"><div class="panel-icon"><svg aria-hidden="true"><use href="#i-lock"/></svg></div><div><h2>Web interface password</h2><p>You’ll use this to sign in to your controller.</p></div></div>
+          <label class="field">New password<input name="webPassword" type="password" required minlength="10" maxlength="128" autocomplete="new-password" placeholder="At least 10 characters"></label>
+          <label class="field">Confirm password<input name="confirmation" type="password" required minlength="10" maxlength="128" autocomplete="new-password" placeholder="Enter it again"></label>
+        </article>
+        <p class="form-error" id="setup-error" role="alert"></p>
+        <button class="btn setup-submit" id="setup-connect" type="submit">Save and connect<svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+        <p class="hint inline-8">Keep this page open while connecting.</p>
+      </form>
+      <div class="setup-progress" id="setup-progress" role="status" hidden><svg aria-hidden="true"><use href="#i-wifi"/></svg><span>Connecting to your network…</span></div>
+      <article class="panel setup-success" id="setup-success" hidden aria-labelledby="setup-success-heading">
+        <div class="panel-icon inline-9"><svg aria-hidden="true"><use href="#i-check"/></svg></div>
+        <h2 id="setup-success-heading" tabindex="-1">You’re connected</h2><p>Connected to <strong id="setup-connected-network"></strong>.</p>
+        <ol><li>Reconnect your phone or computer to this Wi-Fi network.</li><li>Open the controller’s address and sign in with your new web password.</li></ol>
+        <div class="setup-address mono" id="setup-address"></div>
+        <p class="hint">The setup Wi-Fi closes automatically after saving.</p>
+        <button class="btn" id="setup-finish" type="button">Continue<svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+      </article>
+    </div></div>
+  </section>
+
+  <template id="zone-template"><article class="zone-card"><div class="card-body"><div class="zone-top"><div class="zone-icon"><svg aria-hidden="true"><use class="room-icon" href="#i-sofa"/></svg></div></div><h2 class="zone-title"></h2><div class="stepper"><button class="adjust" type="button" data-step="-0.5">−</button><div class="temperature-display"><div class="temperature"><input type="number" step="0.5"><span class="unit-label">°C</span></div><output class="regular-temperature" hidden></output></div><button class="adjust" type="button" data-step="0.5">+</button></div><div class="segmented" role="group"><button type="button" data-mode="normal"><svg aria-hidden="true"><use href="#i-sun"/></svg>Normal</button><button type="button" data-mode="eco"><svg aria-hidden="true"><use href="#i-leaf"/></svg>Eco</button></div></div></article></template>
+  <template id="zone-row-template"><button class="zone-row" type="button"><span class="zone-icon"><svg aria-hidden="true"><use class="room-icon" href="#i-sofa"/></svg></span><span class="zone-row-copy"><span class="zone-row-name"></span><span class="zone-meta"><span class="badge neutral zone-unit"></span><span class="badge neutral zone-offset"></span></span></span><span class="edit-label"><span>Edit</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></span></button></template>
+
+  <dialog id="password-dialog" aria-labelledby="password-title"><div class="dialog-body"><div class="dialog-heading"><h2 id="password-title">Change your password</h2><button class="icon-btn" type="button" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div><p class="dialog-intro">Use a unique password for the web interface. Your API token and Wi-Fi password stay unchanged.</p><form id="password-form"><label class="field">Current password<input name="current" type="password" required autocomplete="current-password"></label><label class="field">New password<input name="newPassword" type="password" required minlength="10" maxlength="128" autocomplete="new-password"><span class="hint">At least 10 characters.</span></label><label class="field">Confirm new password<input name="confirmation" type="password" required autocomplete="new-password"></label><p class="form-error" id="password-error" role="alert"></p><p class="hint">You’ll sign in again after changing it.</p><div class="dialog-actions"><button class="btn secondary" type="button" data-close>Cancel</button><button class="btn" type="submit">Update password</button></div></form></div></dialog>
+
+
+  <dialog id="revoke-dialog" aria-labelledby="revoke-title"><div class="dialog-body"><div class="dialog-heading"><h2 id="revoke-title">Revoke API access?</h2><button class="icon-btn" type="button" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div><p class="dialog-intro">Home Assistant and scripts using this token will stop connecting immediately. You can generate another token later. Web sign-in stays available.</p><div class="dialog-actions"><button class="btn secondary" type="button" data-close>Keep token</button><button class="btn danger" id="confirm-revoke">Revoke token</button></div></div></dialog>
+  <dialog id="zone-dialog" aria-labelledby="zone-dialog-title"><div class="dialog-body"><div class="dialog-heading"><h2 id="zone-dialog-title">Zone settings</h2><button class="icon-btn" type="button" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div><form id="zone-form"><label class="field">Zone name<input name="name" required maxlength="64" autocomplete="off"></label><fieldset class="room-icons"><legend>Room icon</legend><div class="icon-choices"><label class="icon-choice"><input type="radio" name="icon" value="sofa" required><svg aria-hidden="true"><use href="#i-sofa"/></svg><span>Living room</span></label><label class="icon-choice"><input type="radio" name="icon" value="bed" required><svg aria-hidden="true"><use href="#i-bed"/></svg><span>Bedroom</span></label><label class="icon-choice"><input type="radio" name="icon" value="desk" required><svg aria-hidden="true"><use href="#i-desk"/></svg><span>Office</span></label><label class="icon-choice"><input type="radio" name="icon" value="kitchen" required><svg aria-hidden="true"><use href="#i-kitchen"/></svg><span>Kitchen</span></label><label class="icon-choice"><input type="radio" name="icon" value="bathroom" required><svg aria-hidden="true"><use href="#i-bathroom"/></svg><span>Bathroom</span></label><label class="icon-choice"><input type="radio" name="icon" value="hallway" required><svg aria-hidden="true"><use href="#i-hallway"/></svg><span>Hallway</span></label></div></fieldset><label class="field">Unit<select name="unit"><option value="celsius">Celsius (°C)</option><option value="fahrenheit">Fahrenheit (°F)</option></select></label><p id="unit-target-note" class="hint inline-10" hidden></p><label class="field">Eco offset<input name="offset" type="number" min="-9" max="9" step="1" required><span class="hint">Used when Eco mode is selected.</span></label><p id="zone-error" class="form-error" role="alert"></p><div class="dialog-actions"><button class="btn secondary" type="button" data-close>Cancel</button><button class="btn" type="submit">Save zone</button></div></form><div id="zone-extra"><hr class="dialog-divider"><div class="row spread"><button class="btn secondary" id="pair-zone"><svg aria-hidden="true"><use href="#i-radio"/></svg>Pair a heater</button><button class="btn quiet inline-11" id="delete-zone">Delete zone</button></div></div></div></dialog>
+  <dialog id="pair-dialog" aria-labelledby="pair-title"><div class="dialog-body"><div class="dialog-heading"><h2 id="pair-title">Add a heater</h2><button class="icon-btn" type="button" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div><p class="dialog-intro">Put the heater into learning mode, then start a 30-second pairing window. The controller repeats this zone’s current settings every 5 seconds.</p><div class="pairing-note" id="pair-progress" role="status">Ready to start pairing.</div><p class="hint inline-12">Verify success on the heater itself. A timer or radio acknowledgement does not confirm pairing.</p><div class="dialog-actions"><button class="btn secondary" type="button" id="stop-pair" hidden>Stop pairing</button><button class="btn" id="start-pair">Start pairing</button></div></div></dialog>
+  <dialog id="delete-dialog" aria-labelledby="delete-title"><div class="dialog-body"><div class="dialog-heading"><h2 id="delete-title">Delete this zone?</h2><button class="icon-btn" type="button" data-close aria-label="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div><p class="dialog-intro">This removes the zone from the controller. It does not unpair its heaters or switch them off.</p><div class="dialog-actions"><button class="btn secondary" type="button" data-close>Keep zone</button><button class="btn danger" id="confirm-delete">Delete zone</button></div></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="inline-13">JavaScript is required to use the controller.</p></noscript>
+</body>
+</html>

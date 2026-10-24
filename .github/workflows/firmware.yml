@@ -1,0 +1,48 @@
+name: Firmware
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          package-manager-cache: false
+      - uses: arduino/setup-arduino-cli@v2
+        with:
+          version: "1.x"
+      - name: Install pinned firmware dependencies
+        run: |
+          python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          lock = json.loads(Path("src/firmware/dependencies.json").read_text())
+          subprocess.run(["arduino-cli", "core", "update-index", "--additional-urls", lock["index_url"]], check=True)
+          subprocess.run(["arduino-cli", "core", "install", f"{lock['core']}@{lock['core_version']}",
+                          "--additional-urls", lock["index_url"]], check=True)
+          subprocess.run(["arduino-cli", "lib", "install",
+                          *(f"{name}@{version}" for name, version in lock["libraries"].items())], check=True)
+          PY
+      - name: Native tests, web assets, documentation, and Nano build
+        run: python3 -B scripts/check_firmware.py --build --output-dir build/firmware
+      - name: Desktop and mobile browser tests
+        run: node scripts/check_firmware_browser.cjs google-chrome
+      - name: Working tree checks
+        run: git diff --check
